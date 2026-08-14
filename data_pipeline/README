@@ -1,0 +1,12 @@
+# Data Pipeline
+
+Run `python pipeline.py`. The script scrapes five paginated catalogue pages with `requests` + `BeautifulSoup`, visits each product detail page to obtain its category, cleans and converts the data, creates normalized SQLite tables, loads them, executes five SQL queries, and validates the JOIN with pandas.
+
+The required fixed rate is **1 GBP = 105.50 INR**. No live currency lookup is used.
+
+Parsing failures for numeric fields are median-imputed after successful parsing. Title/category failures cause a row to be dropped because those fields are essential to identify and group a catalog item. Availability is parsed as `True` when its text contains `In stock`.
+
+The five SQL queries collectively demonstrate SELECT/WHERE, ORDER BY, LIMIT, DISTINCT, BETWEEN/IN and a PK/FK JOIN. Their query strings and outputs are saved in `sql_outputs.md`. `books.db` is regenerated from scratch, so it is not necessary to depend on a prebuilt database.
+
+## SQL artifact
+The script writes `sql_outputs.md` after a successful live scrape. Because this build environment cannot resolve the public scraping host, that runtime artifact is intentionally not fabricated.
